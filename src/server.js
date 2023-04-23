@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const statesRouter = require('./routes/states');
+const rootRouter = require('./routes/root.js');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 
@@ -15,7 +16,7 @@ mongoose.connect("mongodb+srv://kshields9911:Loveless1@cluster0.uq6dgqa.mongodb.
 
 // define routes
 app.use(bodyParser.json());
-
+app.use('/', rootRouter);
 app.use('/states', statesRouter);
 
 app.use((req, res, next) => {
