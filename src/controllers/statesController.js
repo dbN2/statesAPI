@@ -40,7 +40,7 @@ exports.getStates = async (req, res) => {
   
       // Find state in MongoDB and add funfacts
       const stateFromDb = await State.findOne({ stateCode });
-      if (stateFromDb) {
+      if (stateFromDb.funfacts) {
         state.funfacts = stateFromDb.funfacts;
       }
   
@@ -58,8 +58,11 @@ exports.getStates = async (req, res) => {
       // Find state in MongoDB
       const stateFromDb = await State.findOne({ stateCode });
       if (!stateFromDb) {
-        return res.status(404).json({ error: 'State not found' });
+        return res.status(404).json({ error: 'Invalid state abbreviation parameter.'});
       }
+        const state = statesData.find(state => state.code === stateCode);
+        const stateName = state.state;
+
   
       // Choose random funfact
       const funfacts = stateFromDb.funfacts;
@@ -70,7 +73,7 @@ exports.getStates = async (req, res) => {
       if (funfact) {
         res.json({ funfact });
       } else {
-        res.json({ message: 'No fun facts found for this state' });
+        res.json({ message: `No Fun Facts found for ${stateName}` });
       }
     } catch (error) {
       console.error(error);
@@ -85,7 +88,7 @@ exports.getStates = async (req, res) => {
       // Find state in statesData.json
       const stateFromData = statesData.find(state => state.code === stateCode);
       if (!stateFromData) {
-        return res.status(404).json({ error: 'State not found' });
+        return res.status(404).json({ error: 'Invalid state abbreviation parameter.' });
       }
   
       // Respond with state and capital
@@ -103,7 +106,7 @@ exports.getStates = async (req, res) => {
       // Find state in statesData.json
       const stateFromData = statesData.find(state => state.code === stateCode);
       if (!stateFromData) {
-        return res.status(404).json({ error: 'State not found' });
+        return res.status(404).json({ error: 'Invalid state abbreviation parameter.' });
       }
   
       // Respond with state and nickname
@@ -121,7 +124,7 @@ exports.getStates = async (req, res) => {
       // Find state in statesData.json
       const stateFromData = statesData.find(state => state.code === stateCode);
       if (!stateFromData) {
-        return res.status(404).json({ error: 'State not found' });
+        return res.status(404).json({ error: 'Invalid state abbreviation parameter.' });
       }
   
       // Respond with state and population
@@ -139,7 +142,7 @@ exports.getStates = async (req, res) => {
       // Find state in statesData.json
       const stateFromData = statesData.find(state => state.code === stateCode);
       if (!stateFromData) {
-        return res.status(404).json({ error: 'State not found' });
+        return res.status(404).json({ error: 'Invalid state abbreviation parameter.' });
       }
   
       // Respond with state and admission date
@@ -163,7 +166,7 @@ exports.getStates = async (req, res) => {
       // Find state in MongoDB
       const stateFromDb = await State.findOne({ stateCode });
       if (!stateFromDb) {
-        return res.status(404).json({ error: 'State not found' });
+        return res.status(404).json({ error: 'Invalid state abbreviation parameter.' });
       }
   
       // Add new fun facts to existing ones

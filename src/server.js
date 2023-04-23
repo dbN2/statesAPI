@@ -3,12 +3,12 @@ const mongoose = require('mongoose');
 const statesRouter = require('./routes/states');
 const rootRouter = require('./routes/root.js');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
 
 mongoose.set('strictQuery', false);
-
 
 // connect to MongoDB
 mongoose.connect("mongodb+srv://kshields9911:Loveless1@cluster0.uq6dgqa.mongodb.net/States?retryWrites=true&w=majority"
@@ -17,6 +17,7 @@ mongoose.connect("mongodb+srv://kshields9911:Loveless1@cluster0.uq6dgqa.mongodb.
   .catch(err => console.error('Could not connect to MongoDB...', err));
 
 // define routes
+app.use(cors);
 app.use(bodyParser.json());
 app.use('/', rootRouter);
 app.use('/states', statesRouter);
