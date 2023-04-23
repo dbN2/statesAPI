@@ -7,6 +7,8 @@ require('dotenv').config();
 
 const app = express();
 
+mongoose.set('strictQuery', false);
+
 
 // connect to MongoDB
 mongoose.connect("mongodb+srv://kshields9911:Loveless1@cluster0.uq6dgqa.mongodb.net/States?retryWrites=true&w=majority"
