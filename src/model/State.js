@@ -10,6 +10,8 @@ const stateSchema = new mongoose.Schema({
     funfacts: {
       type: [String]
     },
+    versionKey: true, // Here You have to add.
+
     capital: {
       type: String
     },
