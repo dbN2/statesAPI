@@ -10,14 +10,12 @@ const corsOptions = require('./config/corsOptions');
 
 const app = express();
 
-// connect to MongoDB
 const dbconn = process.env.DATABASE_URI;
 mongoose.connect(dbconn
 )
   .then(() => console.log('Connected to MongoDB...'))
   .catch(err => console.error('Could not connect to MongoDB...', err));
 
-// define routes
 app.use(cors());
 app.use(bodyParser.json());
 app.use('/', rootRouter);
@@ -42,6 +40,5 @@ app.use((req, res, next) => {
     }
   });
 
-// start the server
 const port =  3000;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
