@@ -10,7 +10,6 @@ const stateSchema = new mongoose.Schema({
     funfacts: {
       type: [String]
     },
-
     capital: {
       type: String
     },
@@ -22,8 +21,8 @@ const stateSchema = new mongoose.Schema({
     },
     admission: {
       type: String
-    }}
-  , { versionKey: '__v' }); // or simply versionKey: true);
+    },
+  });
   
   const State = mongoose.model('State', stateSchema);
   
