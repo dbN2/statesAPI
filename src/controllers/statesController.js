@@ -8,7 +8,6 @@ exports.getStates = async (req, res) => {
       const isContiguous = req.query.contig === 'true';
       const isNoncontiguous = req.query.contig === 'false';
   
-      // Retrieve state data from MongoDB
       const statesFromDb = await State.find();  
   
       // Filter state data based on contiguous status
@@ -17,7 +16,7 @@ exports.getStates = async (req, res) => {
         isNoncontiguous ? statesData.filter(state => state.code == 'AK' || state.code == 'HI') : statesData
         ;
   
-      // Add funfacts to state data from MongoDB
+      // Add funfacts to state
       stateData.forEach(state => {
         const stateCode = state.code;
         const stateWithFacts = statesFromDb.find(state => state.stateCode === stateCode);
@@ -30,20 +29,16 @@ exports.getStates = async (req, res) => {
       res.status(500).send('Server Error');
     }
   };
-//{"message":"Invalid state abbreviation parameter"}
-//{"message":"Invalid state abbreviation parameter"}
 
   exports.getState = async (req, res) => {
     try {
       const stateCode = req.params.state.toUpperCase();
   
-      // Find state in statesData array
       const state = statesData.find(state => state.code === stateCode);
       if (!state) {
         return res.status(404).json({ message: 'Invalid state abbreviation parameter'});
       }
   
-      // Find state in MongoDB and add funfacts
       const stateFromDb = await State.findOne({ stateCode });
   
       console.log(stateFromDb.funfacts);
@@ -61,7 +56,6 @@ exports.getStates = async (req, res) => {
     try {
       const stateCode = req.params.state.toUpperCase();
   
-      // Find state in MongoDB
       const stateFromDb = await State.findOne({ stateCode });
       if (!stateFromDb) {
         return res.status(404).json({ message: 'Invalid state abbreviation parameter'});
@@ -75,7 +69,6 @@ exports.getStates = async (req, res) => {
       const randomIndex = Math.floor(Math.random() * funfacts.length);
       const funfact = funfacts[randomIndex];
   
-      // Respond with funfact or appropriate message
       if (funfact) {
         res.json({ funfact });
       } else {
@@ -91,13 +84,11 @@ exports.getStates = async (req, res) => {
     try {
       const stateCode = req.params.state.toUpperCase();
   
-      // Find state in statesData.json
       const stateFromData = statesData.find(state => state.code === stateCode);
       if (!stateFromData) {
         return res.status(404).json({ message: 'Invalid state abbreviation parameter' });
       }
   
-      // Respond with state and capital
       res.json({ state: stateFromData.state, capital: stateFromData.capital_city });
     } catch (error) {
       console.error(error);
@@ -109,13 +100,11 @@ exports.getStates = async (req, res) => {
     try {
       const stateCode = req.params.state.toUpperCase();
   
-      // Find state in statesData.json
       const stateFromData = statesData.find(state => state.code === stateCode);
       if (!stateFromData) {
         return res.status(404).json({ message: 'Invalid state abbreviation parameter' });
       }
   
-      // Respond with state and nickname
       res.json({ state: stateFromData.state, nickname: stateFromData.nickname });
     } catch (error) {
       console.error(error);
@@ -127,13 +116,11 @@ exports.getStates = async (req, res) => {
     try {
       const stateCode = req.params.state.toUpperCase();
   
-      // Find state in statesData.json
       const stateFromData = statesData.find(state => state.code === stateCode);
       if (!stateFromData) {
         return res.status(404).json({ message: 'Invalid state abbreviation parameter' });
       }
   
-      // Respond with state and population
       res.json({ state: stateFromData.state, population: stateFromData.population.toLocaleString() });
     } catch (error) {
       console.error(error);
@@ -145,14 +132,12 @@ exports.getStates = async (req, res) => {
     try {
       const stateCode = req.params.state.toUpperCase();
   
-      // Find state in statesData.json
       const stateFromData = statesData.find(state => state.code === stateCode);
       if (!stateFromData) {
         return res.status(404).json({ message: 'Invalid state abbreviation parameter' });
       }
   
-      // Respond with state and admission date
-      res.json({ state: stateFromData.state, admitted: stateFromData.admission_date });
+       res.json({ state: stateFromData.state, admitted: stateFromData.admission_date });
     } catch (error) {
       console.error(error);
       res.status(500).send('Server Error');
@@ -174,13 +159,12 @@ exports.getStates = async (req, res) => {
       }
       if(!Array.isArray(funFacts)) return res.json({message: 'State fun facts value must be an array'});
   
-      // Find state in MongoDB
       const stateFromDb = await State.findOne({ stateCode });
       if (!stateFromDb) {
         return res.status(404).json({ message: 'Invalid state abbreviation parameter' });
       }
   
-      // Add new fun facts to existing ones
+      // Add new fun facts 
       const existingFacts = stateFromDb.funfacts ? stateFromDb.funfacts : [];
       const newFacts = funFacts;
       const allFacts = [...existingFacts, ...newFacts]; // Remove duplicates
@@ -188,7 +172,6 @@ exports.getStates = async (req, res) => {
       // Update state with new fun facts
       const updatedState = await State.findOneAndUpdate({ stateCode }, { funfacts: allFacts }, { new: true });
   
-      // Respond with updated state
       res.json(updatedState);
     } catch (error) {
       console.error(error);
@@ -205,8 +188,6 @@ exports.getStates = async (req, res) => {
       if(!index ) return res.json({ message: "State fun fact index value required"});
       if(!funFact) return res.json({ message:  'State fun fact value required' });
     
-  
-      // Find state in MongoDB
       const stateFromDb = await State.findOne({ stateCode });
       if (!stateFromDb) {
         return res.json({ error: 'State not found' });
@@ -214,7 +195,7 @@ exports.getStates = async (req, res) => {
       
       const stateFromData = statesData.find(state => state.code === stateCode);  
       
-      // Find index and update it 
+      // Find index of fact
       
       let funfacts = stateFromDb.funfacts;
       if(!funfacts || funfacts==[]){
@@ -227,10 +208,9 @@ exports.getStates = async (req, res) => {
       funfacts[index - 1] = funFact;
       
   
-      // Update state with new fun facts
+      // Update state 
       const updatedState = await State.findOneAndUpdate({ stateCode }, { funfacts: funfacts }, { new: true });
   
-      // Respond with updated state
       res.json(updatedState);
     } catch (error) {
       console.error(error);
@@ -245,7 +225,6 @@ exports.getStates = async (req, res) => {
 
       if(!index) return res.json({ message: "State fun fact index value required"});
   
-      // Find state in MongoDB
       const stateFromDb = await State.findOne({ stateCode });
       if (!stateFromDb) {
         return res.status(404).json({ error: 'State not found' });
@@ -264,10 +243,9 @@ exports.getStates = async (req, res) => {
         
       funfacts = stateFromDb.funfacts.filter((fact)=> fact!=factToDelete);
       
-      // Update state with new fun facts
+      // Update state
       const updatedState = await State.findOneAndUpdate({ stateCode }, { funfacts: funfacts }, { new: true });
   
-      // Respond with updated state
       res.json(updatedState);
     } catch (error) {
       console.error(error);
