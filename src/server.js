@@ -10,9 +10,6 @@ const corsOptions = require('./config/corsOptions');
 
 const app = express();
 
-mongoose.set('strictQuery', false);
-
-
 // connect to MongoDB
 const dbconn = process.env.DATABASE_URI;
 mongoose.connect(dbconn
@@ -21,8 +18,7 @@ mongoose.connect(dbconn
   .catch(err => console.error('Could not connect to MongoDB...', err));
 
 // define routes
-app.use(cors(corsOptions));
-
+app.use(cors());
 app.use(bodyParser.json());
 app.use('/', rootRouter);
 app.use('/states', statesRouter);
